@@ -19,4 +19,4 @@ hobby_data=responsehobby.json()
 FaceIn['Hobby']= [hobby['title'] for hobby in hobby_data[:len(FaceIn)]]
 FaceIn.head(10)
 
-FaceIn.to_csv('FaceIn',sep=',')
+FaceIn.to_csv('FaceIn.csv',sep=',')
