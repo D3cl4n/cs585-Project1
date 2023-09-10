@@ -18,7 +18,7 @@ FaceIn=[]
 for i in range(0,10):
 #     rand_index=random.randint(0,len(country_names)-1)
     rand_index=random.randint(0,50)
-    FaceIn.append([i,names.get_full_name(),country_names[rand_index],rand_index,hobbies[rand_index]])
+    FaceIn.append([i,names.get_full_name(),country_names[rand_index],rand_index,random.choice(hobbies)])
     
 FaceIn=pd.DataFrame(FaceIn,columns=['ID','Name','Nationaliy','Country Code','Hobby'])
 # FaceIn   
