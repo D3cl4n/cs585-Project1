@@ -6,17 +6,21 @@ import pandas as pd
 urlcountries = "https://raw.githubusercontent.com/Imagin-io/country-nationality-list/master/countries.json"
 responsecountries=requests.get(urlcountries)
 country_data=responsecountries.json()
-country_names = [{'nationality': country['nationality'], 'num_code': country['num_code']} for country in country_data]
-# create dataframe FaceIn
-FaceIn = pd.DataFrame(country_names)
-FaceIn =  FaceIn[FaceIn['num_code'].astype(int)<=50]
-#Add ID
-FaceIn['ID']=range(1,len(FaceIn)+1)
+country_names = [country['nationality'] for country in country_data]
 #Add Hobby 
 urlhobby="https://gist.githubusercontent.com/carlelieser/884584d06b2d9429f321ec192f6dc7b5/raw/0888b5449ecda4787001b74811e645d0a74b8132/hobbies.json"
 responsehobby=requests.get(urlhobby)
 hobby_data=responsehobby.json()
-FaceIn['Hobby']= [hobby['title'] for hobby in hobby_data[:len(FaceIn)]]
-FaceIn.head(10)
+hobbies=[hobby['title'] for hobby in hobby_data]
+# create dataframe FaceIn
+FaceIn=[]
 
+for i in range(0,10):
+#     rand_index=random.randint(0,len(country_names)-1)
+    rand_index=random.randint(0,50)
+    FaceIn.append([i,names.get_full_name(),country_names[rand_index],rand_index,hobbies[rand_index]])
+    
+FaceIn=pd.DataFrame(FaceIn,columns=['ID','Name','Nationaliy','Country Code','Hobby'])
+# FaceIn   
+    
 FaceIn.to_csv('FaceIn.csv',sep=',')
