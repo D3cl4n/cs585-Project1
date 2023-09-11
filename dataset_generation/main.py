@@ -4,7 +4,7 @@ from facein import FaceInData
 
 # Generate all the data
 def main():
-    size = 10
+    size = 20
     facein_handler = FaceInData(size)
     facein_handler.generateData()
     log_handler = LogsGeneration(size, "FaceIn.csv")

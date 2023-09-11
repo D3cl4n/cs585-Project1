@@ -1,11 +1,21 @@
 FriendRel,PersonA_ID,PersonB_ID,DateOfFriendship,Desc
-3776737,0,0,956926,These users are colleagues.
-12722635,0,0,168134,These users are friends from college.
-12514182,0,0,686249,These users are friends from college.
-5871660,0,0,133967,These users are friends from college.
-3563818,0,0,985759,These users are colleagues.
-6210997,0,0,350181,These users are family
-10549245,0,0,709454,These users are friends through their family.
-12056541,0,0,597250,These users are family
-16439470,0,0,626342,These users are former colleagues.
-1183530,0,0,94501,These users are friends through their family.
+14270299,1,14,569023,These users are friends through their family.
+6194379,5,13,46017,These users are family
+11992754,10,19,636179,These users are former colleagues.
+17703007,4,19,127429,These users are friends through their family.
+10670295,18,1,449555,These users are colleagues.
+15113879,16,3,838388,These users are friends through their family.
+4697733,5,12,312619,These users were friends when they were younger.
+18268311,17,0,951401,These users are former colleagues.
+16394931,2,8,287866,These users are family
+10537703,19,1,381364,These users are friends through their family.
+7529155,17,16,368473,These users are family
+12130956,19,5,99217,These users are former colleagues.
+8358775,4,9,548370,These users were friends when they were younger.
+10337498,19,16,496021,These users are colleagues.
+15339205,0,4,967902,These users are family
+8180984,3,13,298170,These users are colleagues.
+7507361,15,10,246402,These users are former colleagues.
+18425000,2,12,680466,These users are friends from college.
+18895229,0,10,337446,These users are friends from college.
+8550647,19,3,307847,These users are colleagues.

@@ -21,7 +21,7 @@ class FaceInData:
         # create dataframe FaceIn
         FaceIn=[]
 
-        for i in range(1,self.size):
+        for i in range(1,self.size + 1):
         #     rand_index=random.randint(0,len(country_names)-1)
             rand_index=random.randint(1,50)
             FaceIn.append([i,names.get_full_name(),country_names[rand_index],rand_index,random.choice(hobbies)])

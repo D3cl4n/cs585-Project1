@@ -14,7 +14,7 @@ class Associates:
         for row in reader:
             FaceInIDs.append(row['ID'])
 
-    with (open("associates.csv", 'w', newline = '') as file):
+    with open("associates.csv", 'w', newline = '') as file:
       writer = csv.writer(file)
       FriendRel = 0
       PersonA_ID = 0
