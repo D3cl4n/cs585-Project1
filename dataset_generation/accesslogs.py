@@ -16,8 +16,15 @@ class LogsGeneration:
         ]
 
     def read_first_csv(self): # will return tuple of person ID 
+        possible_ids = []
         with open(self.dataset_path, "r") as f:
-            pass
+            lines = f.readlines()
+            for line in lines:
+                id_val = line.split(",")[0]
+                possible_ids.append(id_val)
+                print(id_val)
+
+        return possible_ids
     
     def create_output_csv(self):
         with open(self.output_path, "w") as f:
@@ -37,11 +44,11 @@ class LogsGeneration:
         return final_entry[:-1]
 
 
-    def create_entry(self):
+    def create_entry(self, ids):
         access_id_lower = 1
         access_id_upper = 10000000 
-        by_who = 2
-        what_page = 3
+        by_who = ids[random.randint(0, len(ids) - 1)]
+        what_page = ids[random.randint(0, len(ids) - 1)]
         access_id = random.randint(access_id_lower, access_id_upper)
         idx = random.randint(0, len(self.access_types) - 1)
         access_type = self.access_types[idx]
@@ -55,9 +62,10 @@ class LogsGeneration:
 
     def generate_data(self):
         self.create_output_csv()
+        ids = self.read_first_csv()
         for x in range(0, self.size):
-            self.create_entry()
+            self.create_entry(ids)
 
 if __name__ == '__main__':
-    test_code = LogsGeneration(10, "test")
+    test_code = LogsGeneration(10, "FaceIn.csv")
     test_code.generate_data()
