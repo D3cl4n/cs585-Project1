@@ -19,8 +19,10 @@ class LogsGeneration:
         possible_ids = []
         with open(self.dataset_path, "r") as f:
             lines = f.readlines()
-            for line in lines:
-                id_val = line.split(",")[0]
+            for x in range(0, len(lines)):
+                if x == 0:
+                    continue
+                id_val = lines[x].split(",")[0]
                 possible_ids.append(id_val)
                 print(id_val)
 
