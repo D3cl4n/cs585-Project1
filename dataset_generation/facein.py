@@ -15,12 +15,12 @@ hobbies=[hobby['title'] for hobby in hobby_data]
 # create dataframe FaceIn
 FaceIn=[]
 
-for i in range(0,10):
+for i in range(1,10):
 #     rand_index=random.randint(0,len(country_names)-1)
-    rand_index=random.randint(0,50)
+    rand_index=random.randint(1,50)
     FaceIn.append([i,names.get_full_name(),country_names[rand_index],rand_index,random.choice(hobbies)])
     
 FaceIn=pd.DataFrame(FaceIn,columns=['ID','Name','Nationaliy','Country Code','Hobby'])
 # FaceIn   
     
-FaceIn.to_csv('FaceIn.csv',sep=',')
+FaceIn.to_csv('FaceIn.csv',sep=',',index=False)
