@@ -24,6 +24,11 @@ class Associates:
         # Also, there can't be another row in the dataset where PersonA_ID and PersonB_ID are swapped
         FriendRel = random.randint(1,20000000)
         DateOfFriendship = random.randint(1,1000000)
+
+        # Read the FaceIn.csv file and randomly choose the PersonA_ID and PersonB_ID values
+        # with a random number generated between 1 to the number of IDs in the file
+
+
         writerArg = [FriendRel,PersonA_ID,PersonB_ID,DateOfFriendship,random.choice(Desc)]
         writer.writerow(writerArg)
 
