@@ -42,6 +42,8 @@ class Associates:
         while PersonA_ID == PersonB_ID or (PersonA_ID,PersonB_ID) in IDPairs or (PersonB_ID,PersonA_ID) in IDPairs:
             PersonB_ID = random.choice(FaceInIDs)
 
+        IDPairs.append((PersonA_ID,PersonB_ID))
+
         writerArg = [FriendRel,PersonA_ID,PersonB_ID,DateOfFriendship,random.choice(Desc)]
         writer.writerow(writerArg)
 
