@@ -66,6 +66,3 @@ class LogsGeneration:
         for x in range(0, self.size):
             self.create_entry(ids)
 
-if __name__ == '__main__':
-    test_code = LogsGeneration(10, "FaceIn.csv")
-    test_code.generate_data()
