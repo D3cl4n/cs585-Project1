@@ -45,6 +45,4 @@ class Associates:
         writerArg = [FriendRel,PersonA_ID,PersonB_ID,DateOfFriendship,random.choice(Desc)]
         writer.writerow(writerArg)
 
-if __name__ == '__main__':
-  test = Associates(10)
-  test.generateData()
+
