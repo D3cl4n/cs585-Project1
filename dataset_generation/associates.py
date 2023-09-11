@@ -2,10 +2,10 @@ import csv
 import random
 
 class Associates:
-  def _init_(self, size):
+  def __init__(self, size):
     self.size = size
 
-  def generateData():
+  def generateData(self):
     with open("associates.csv", 'w', newline = '') as file:
       writer = csv.writer(file)
       FriendRel = 0
@@ -26,4 +26,7 @@ class Associates:
         DateOfFriendship = random.randint(1,1000000)
         writerArg = [FriendRel,PersonA_ID,PersonB_ID,DateOfFriendship,random.choice(Desc)]
         writer.writerow(writerArg)
-        
+
+if __name__ == '__main__':
+  test = Associates(10)
+  test.generateData()
