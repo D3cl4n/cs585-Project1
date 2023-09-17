@@ -7,13 +7,13 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 
 public class TaskA
 {
@@ -28,35 +28,35 @@ public class TaskA
             // Access the data from FaceIn.csv
             // If the nationality is the same as a randomly selected nationality,
             // then report the name and hobby of the current user
-            String nationality = "test";
+            String nationality = "Bulgarian";
             String name = "";
             String hobby = "";
             String delimiter = ",";
-            File file = new File("dataset_generation\\FaceIn.csv");
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
             String line = "";
             String[] csvLine;
 
-            while((line = br.readLine()) != null) {
-                csvLine = line.split(delimiter);
-                nationality = csvLine[2];
-                // Need to randomly pick a nationality to compare to this user's
-                if(nationality.equals("")) {
-                    name = csvLine[1];
-                    hobby = csvLine[4];
-                    output.set(name + "," + hobby);
-                    context.write(output,one);
-                }
+            csvLine = value.toString().split(delimiter);
+            if (csvLine[2].equals(nationality))
+            {
+                name = csvLine[1];
+                hobby = csvLine[4];
+                output.set(name + "," + hobby);
+                context.write(output, one);
             }
         }
     }
 
     public static void main(String[] args) throws Exception
     {
+        //System.out.println("start");
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "Task A");
         job.setJarByClass(TaskA.class);
         job.setMapperClass(TokenizerMapper.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path("src/FaceIn.csv"));
+        FileOutputFormat.setOutputPath(job, new Path("output/out.txt"));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
