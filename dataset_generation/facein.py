@@ -13,8 +13,8 @@ class FaceInData:
         responsecountries=requests.get(urlcountries)
         country_data=responsecountries.json()
         country_names = [country['nationality'] for country in country_data]
-        for x in country_names:
-            x = x.replace(",", " ")
+        for x in range(0, len(country_names) - 1):
+            country_names[x] = country_names[x].replace(",", " ")
         #Add Hobby 
         urlhobby="https://gist.githubusercontent.com/carlelieser/884584d06b2d9429f321ec192f6dc7b5/raw/0888b5449ecda4787001b74811e645d0a74b8132/hobbies.json"
         responsehobby=requests.get(urlhobby)
