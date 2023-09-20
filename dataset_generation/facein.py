@@ -13,6 +13,8 @@ class FaceInData:
         responsecountries=requests.get(urlcountries)
         country_data=responsecountries.json()
         country_names = [country['nationality'] for country in country_data]
+        for x in country_names:
+            x = x.replace(",", " ")
         #Add Hobby 
         urlhobby="https://gist.githubusercontent.com/carlelieser/884584d06b2d9429f321ec192f6dc7b5/raw/0888b5449ecda4787001b74811e645d0a74b8132/hobbies.json"
         responsehobby=requests.get(urlhobby)
@@ -26,7 +28,7 @@ class FaceInData:
             rand_index=random.randint(1,50)
             FaceIn.append([i,names.get_full_name(),country_names[rand_index],rand_index,random.choice(hobbies)])
     
-        FaceIn=pd.DataFrame(FaceIn,columns=['ID','Name','Nationaliy','Country Code','Hobby'])
+        FaceIn=pd.DataFrame(FaceIn,columns=['ID','Name','Nationality','Country Code','Hobby'])
         # FaceIn   
     
         FaceIn.to_csv('FaceIn.csv',sep=',',index=False)
