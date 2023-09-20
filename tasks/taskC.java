@@ -26,9 +26,11 @@ public class TaskC
 
             csvLine = value.toString().split(delimiter);
             countryCode = csvLine[3];
+            System.out.println((countryCode));
 
             if (!countryCode.contains("\"") && !countryCode.equals("Country Code")) {
-                output.set(countryCode);
+                IntWritable val = new IntWritable(Integer.parseInt(countryCode));
+                output.set(val.toString().replace(" ", ""));
                 context.write(output, one);
             }
         }
@@ -44,6 +46,7 @@ public class TaskC
             int sum = 0;
             for (IntWritable val : values) {
                 sum += val.get();
+                System.out.println("SUM:" + sum);
             }
             result.set(sum);
             context.write(key, result);
@@ -57,6 +60,7 @@ public class TaskC
         Job job = Job.getInstance(conf, "Task C");
         job.setJarByClass(TaskC.class);
         job.setMapperClass(TokenizerMapper.class);
+        job.setReducerClass(IntSumReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         FileInputFormat.addInputPath(job, new Path(args[1])); //FaceInPage as input
