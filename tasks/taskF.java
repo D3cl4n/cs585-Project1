@@ -120,7 +120,7 @@ public class taskF {
     public static void main(String[] args) throws Exception {
         Configuration conf= new Configuration();
         Job job=new Job(conf,"Task F");
-        job.setJarByClass(TaskD.class);
+        job.setJarByClass(taskF.class);
         job.setReducerClass(ReduceJoinReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
