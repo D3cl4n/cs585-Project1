@@ -90,9 +90,7 @@ public class taskF {
                     String dataType = parts[0];
                     String dataValue = parts[1];
 
-                    if (dataType.equals("Name")) {
-                        name = dataValue;
-                    } else if (dataType.equals("RelCount")) {
+                   if (dataType.equals("RelCount")) {
                         countrel++;
                     }
                     else if (dataType.equals("AccessCount")) {
