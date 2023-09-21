@@ -116,7 +116,7 @@ public class taskB {
                     // If they are, then store the information and remove the ID from notSeenPageIDs
                     int minIndex = 0;
                     int min = mostPopularPages[minIndex][1];
-                    String[] notSeenIDsInfo;
+                    String[] notSeenPageIDsInfo;
                     for (int n = 0; n < mostPopularPages.length; n++) {
                         if (Integer.valueOf(mostPopularPages[n][1]) < min) {
                             min = Integer.valueOf(mostPopularPages[n][1]);
@@ -125,12 +125,12 @@ public class taskB {
                         // Check to see if the page ID hasn't been seen before
                         // Loop through the list of unseen IDs
                         for(int i = 0;i < notSeenPageIDs.size();i++){
-                            notSeenIDsInfo = notSeenPageIDs.get(i).split("\t");
-                            if(notSeenIDsInfo[0] == mostPopularPages[n][0]) {
+                            notSeenPageIDsInfo = notSeenPageIDs.get(i).split("\t");
+                            if(notSeenPageIDsInfo[0] == mostPopularPages[n][0]) {
                                 // The page IDs have been matched so the FaceIn information can be stored
-                                mostPopularPages[n][2];
-                                // Note this index so it can be removed from the list and leave the loop
-
+                                mostPopularPages[n][2] = notSeenPageIDs.get(i);
+                                // Remove the item at this index
+                                notSeenPageIDs.remove(i);
                                 break;
                             }
                         }
@@ -147,6 +147,7 @@ public class taskB {
             // Will write the mostPopularPages array into the context
             // The last time the reducer writes to the context will be when the array has the 10 most popular pages
             // context.write(key, result);
+            context.write(1,mostPopularPages);
         }
     }
 
