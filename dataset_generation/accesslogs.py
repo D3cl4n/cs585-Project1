@@ -1,6 +1,10 @@
+import datetime
 import os
 import time
 import random
+from random import randrange
+from datetime import timedelta
+from datetime import datetime
 
 class LogsGeneration:
     def __init__(self, size, csv_path):
@@ -45,6 +49,12 @@ class LogsGeneration:
         
         return final_entry[:-1]
 
+    def random_date(self, start, end):
+        delta = end - start
+        int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+        random_second = randrange(int_delta)
+        return start + timedelta(seconds=random_second)
+
 
     def create_entry(self, ids):
         access_id_lower = 1
@@ -54,9 +64,11 @@ class LogsGeneration:
         access_id = random.randint(access_id_lower, access_id_upper)
         idx = random.randint(0, len(self.access_types) - 1)
         access_type = self.access_types[idx]
-        curr_time = time.time()
-        access_time = time.ctime(curr_time)
-        entry = [access_id, by_who, what_page, access_type, access_time]
+        start_date = datetime.strptime('6/1/2023 1:30 PM', '%m/%d/%Y %I:%M %p')
+        end_date = datetime.strptime('9/21/2023 1:30 PM', '%m/%d/%Y %I:%M %p')
+        access_date = self.random_date(start_date, end_date)
+
+        entry = [access_id, by_who, what_page, access_type, access_date]
         final_entry = self.format_entry(entry)
 
         self.write_to_csv(final_entry)
