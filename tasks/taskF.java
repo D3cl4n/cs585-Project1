@@ -18,10 +18,9 @@ public class taskF {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: ProductID,Name
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
-                    outkey.set(parts[0]);
+                    outkey.set(parts[0]); // key
                     outvalue.set("Name\t" + parts[1]+"\t"+parts[0]); //concanate the name and id in the the value section
                     context.write(outkey, outvalue);
                 }
@@ -38,11 +37,10 @@ public class taskF {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: OrderID,ProductID,Amount
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
-                    perId.set(parts[1]);  // fk
-                    relID.set("RelCount\t" + parts[0]); //relation id as value
+                    perId.set(parts[1]);  // key
+                    relID.set("RelCount\t" + parts[0]); //relcount+relation id as value
                     context.write(perId, relID);
                 }
             }
