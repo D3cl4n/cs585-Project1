@@ -45,15 +45,20 @@ public class TaskB {
     public static class AccesslogsMapper extends Mapper<Object, Text, Text, Text> {
 
         private final static Text output = new Text();
-        private final static Text one = new Text("1");
+        private final static Text one = new Text("A1");
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] csvLine;
-            csvLine = value.toString().split(",");
+            if (!isHeader(value)) {
+                String[] csvLine;
+                csvLine = value.toString().split(",");
+                // Push the WhatPage ID into the output
+                output.set(csvLine[2]);
+                context.write(output, one); // fk - WhatPage
+            }
+        }
 
-            // Push the WhatPage ID into the output
-            output.set(csvLine[2]);
-            context.write(output, one); // fk - WhatPage
+        private boolean isHeader(Text value) {
+            return value.toString().startsWith("AccessId, ByWho, WhatPage, TypeOfAccess, AccessTime");
         }
     }
     public static class ReduceJoinReducer extends Reducer<Text, Text, Text, Text>{
@@ -61,28 +66,28 @@ public class TaskB {
             Text result = new Text();
             int sum = 0;
             boolean fromAccessMapper = false;
-            // Check if the values are from the Accesslogs Mapper
-            fromAccessMapper = values.iterator().next().toString().equals("1");
-            if(fromAccessMapper){
-                // Input from AccesslogsMapper
-                for(Text val: values) {
+            for(Text val: values) {
+                // Check if the values are from the Accesslogs Mapper
+                fromAccessMapper = val.toString().equals("A1");
+                if (fromAccessMapper) {
+                    // Input from AccesslogsMapper
                     sum++;
-                }
-            } else {
-                // Input from FaceInMapper
-                for(Text val: values) {
+                    // System.out.println(key + ": " + sum);
+                } else {
+                    // Input from FaceInMapper
                     String[] reducerInput = val.toString().split("\t");
-                    /* If the page ID has been seen before, then need to check if it's in the mostPopularPages array.
-                       If it's not in mostPopularPages, then the information can be disregarded.
-                       Otherwise, the information needs to be stored in the respective page ID found in mostPopularPages.
-                       If the page ID has not been seen before, then we need to store it until
-                       it has been seen and compared to the mostPopularPages.
-                       The page IDs that haven't been seen before can be stored in notSeenPageIDs.
-                     */
-                    if(seenPageIDs.contains(reducerInput[0])) {
+                    // System.out.println(val.toString());
+                /* If the page ID has been seen before, then need to check if it's in the mostPopularPages array.
+                   If it's not in mostPopularPages, then the information can be disregarded.
+                   Otherwise, the information needs to be stored in the respective page ID found in mostPopularPages.
+                   If the page ID has not been seen before, then we need to store it until
+                   it has been seen and compared to the mostPopularPages.
+                   The page IDs that haven't been seen before can be stored in notSeenPageIDs.
+                 */
+                    if (seenPageIDs.contains(reducerInput[0])) {
                         // Need to check mostPopularPages
-                        for(int n = 0;n < mostPopularPages.length;n++) {
-                            if(mostPopularPages[n][0].equals(reducerInput[0])){
+                        for (int n = 0; n < mostPopularPages.length; n++) {
+                            if (mostPopularPages[n][0].equals(reducerInput[0])) {
                                 mostPopularPages[n][2] = val.toString();
                             }
                         }
@@ -106,8 +111,11 @@ public class TaskB {
                             mostPopularPages[n][0] = key.toString();
                             mostPopularPages[n][1] = Integer.toString(sum);
                             mostPopularPages[n][2] = "";
+                            // System.out.println(mostPopularPages[n][0]);
                             if(n == 9) {
                                 popularPagesFilled = true;
+                                // System.out.println("Popular Pages Array Filled.");
+                                // System.out.println("Value of mostPopularPages:\n" + convertPopularPagesArrayToString());
                             }
                             break;
                         }
@@ -126,7 +134,7 @@ public class TaskB {
                         }
                         // Check to see if the page ID hasn't been seen before
                         // Loop through the list of unseen IDs
-                        for(int i = 0;i < notSeenPageIDs.size();i++){
+                        for(int i = 0;i < notSeenPageIDs.size();i++) {
                             notSeenPageIDsInfo = notSeenPageIDs.get(i).split("\t");
                             if(notSeenPageIDsInfo[0] == mostPopularPages[n][0]) {
                                 // The page IDs have been matched so the FaceIn information can be stored
@@ -148,17 +156,18 @@ public class TaskB {
             }
             // Will write the mostPopularPages array into the context
             // The last time the reducer writes to the context will be when the array has the 10 most popular pages
-            result.set(convertPagesArrayToText(mostPopularPages));
-            context.write(new Text("Most Popular Pages"),result);
+            result.set(new Text(convertPopularPagesArrayToString()));
+            context.write(new Text("Most Popular Pages\n"),result);
         }
     }
 
-    private static Text convertPagesArrayToText(String[][] pages) {
-        String result = "";
-        for(int n = 0;n < pages.length;n++) {
-            result += pages[n][2] + "\n";
+    private static String convertPopularPagesArrayToString() {
+        StringBuilder str = new StringBuilder();
+        for(int n = 0;n < mostPopularPages.length;n++) {
+            str.append(mostPopularPages[n][2]);
+            str.append("\n");
         }
-        return new Text(result);
+        return str.toString();
     }
 
     public void debug(String[] args) throws Exception {
