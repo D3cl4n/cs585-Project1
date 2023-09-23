@@ -75,7 +75,7 @@ public class TaskB {
                     // System.out.println(key + ": " + sum);
                 } else {
                     // Input from FaceInMapper
-                    String[] reducerInput = val.toString().split("\t");
+                    String[] faceInInput = val.toString().split("\t");
                     // System.out.println(val.toString());
                 /* If the page ID has been seen before, then need to check if it's in the mostPopularPages array.
                    If it's not in mostPopularPages, then the information can be disregarded.
@@ -84,21 +84,32 @@ public class TaskB {
                    it has been seen and compared to the mostPopularPages.
                    The page IDs that haven't been seen before can be stored in notSeenPageIDs.
                  */
-                    if (seenPageIDs.contains(reducerInput[0])) {
-                        // Need to check mostPopularPages
-                        for (int n = 0; n < mostPopularPages.length; n++) {
-                            if (mostPopularPages[n][0].equals(reducerInput[0])) {
-                                mostPopularPages[n][2] = val.toString();
+                    // System.out.println(reducerInput[1]);
+                    System.out.println("FaceIn input: " + faceInInput[1]);
+                    for(int i = 0;i < seenPageIDs.size();i++) {
+                        System.out.println("SeenPageID: " + seenPageIDs.get(i));
+                        String seenPageID = seenPageIDs.get(i).replace(" ","");
+                        String redInput = faceInInput[1].replace(" ","");
+                        if (seenPageID.trim().equals(redInput.trim())) {
+                            // Need to check mostPopularPages
+                            for (int n = 0; n < mostPopularPages.length; n++) {
+                                System.out.println("Here");
+                                if (mostPopularPages[n][0].equals(faceInInput[1])) {
+                                    mostPopularPages[n][2] = val.toString();
+                                    System.out.println(val.toString());
+                                    System.out.println(mostPopularPages[n][2]);
+                                }
                             }
+                        } else {
+                            notSeenPageIDs.add(val.toString());
                         }
-                    } else {
-                        notSeenPageIDs.add(val.toString());
                     }
                 }
             }
 
             // Determine if the current page is one of the most popular pages
             if(fromAccessMapper) {
+                seenPageIDs.add(key.toString());
                 /* Loop through the mostPopularPages array and replace the page with
                    the lowest popularity if it's lower than the current page being looked at.
                    If there's an empty row, then just insert the current page in there.
@@ -134,9 +145,9 @@ public class TaskB {
                         }
                         // Check to see if the page ID hasn't been seen before
                         // Loop through the list of unseen IDs
-                        for(int i = 0;i < notSeenPageIDs.size();i++) {
+                        for (int i = 0; i < notSeenPageIDs.size(); i++) {
                             notSeenPageIDsInfo = notSeenPageIDs.get(i).split("\t");
-                            if(notSeenPageIDsInfo[0] == mostPopularPages[n][0]) {
+                            if (notSeenPageIDsInfo[0] == mostPopularPages[n][0]) {
                                 // The page IDs have been matched so the FaceIn information can be stored
                                 mostPopularPages[n][2] = notSeenPageIDs.get(i);
                                 // Remove the item at this index
@@ -147,12 +158,11 @@ public class TaskB {
                     }
                     // Compare the current page's popularity with the page that has the lowest popularity in the list
                     // Replace the page ID and count in that row of mostPopularPages if the current page is more popular
-                    if(Integer.valueOf(mostPopularPages[minIndex][1]) < sum) {
+                    if (Integer.valueOf(mostPopularPages[minIndex][1]) < sum) {
                         mostPopularPages[minIndex][0] = key.toString();
                         mostPopularPages[minIndex][1] = Integer.toString(sum);
                     }
                 }
-                seenPageIDs.add(key.toString());
             }
             // Will write the mostPopularPages array into the context
             // The last time the reducer writes to the context will be when the array has the 10 most popular pages
@@ -163,8 +173,14 @@ public class TaskB {
 
     private static String convertPopularPagesArrayToString() {
         StringBuilder str = new StringBuilder();
+        String[] parts;
         for(int n = 0;n < mostPopularPages.length;n++) {
-            str.append(mostPopularPages[n][2]);
+            // parts = mostPopularPages[n][2].split("\t");
+            // str.append(parts[0]);
+            str.append("ID:");
+            str.append(mostPopularPages[n][0]);
+            str.append("\tCount:");
+            str.append(mostPopularPages[n][1]);
             str.append("\n");
         }
         return str.toString();
