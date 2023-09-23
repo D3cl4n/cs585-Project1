@@ -12,7 +12,7 @@ class LogsGeneration:
         self.dataset_path = csv_path
         self.possible_people_ids = []
         self.possible_page_ids = []
-        self.output_path = os.getcwd() + "access_logs.csv"
+        self.output_path = os.getcwd() + "/access_logs.csv"
         self.access_types = [
             "note", "added a friend", "just viewed", "requested to follow",
             "accepted follow request", "shared a post", "blocked the profile",
@@ -28,7 +28,6 @@ class LogsGeneration:
                     continue
                 id_val = lines[x].split(",")[0]
                 possible_ids.append(id_val)
-                print(id_val)
 
         return possible_ids
     
