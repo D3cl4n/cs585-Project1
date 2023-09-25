@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.IntWritable;
 
-public class taskF {
+public class TaskF {
     public static class FaceInMapper extends Mapper<Object, Text, Text, Text> {
         private Text outkey = new Text();
         private Text outvalue = new Text();
@@ -57,7 +57,6 @@ public class taskF {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: OrderID,ProductID,Amount
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     perId.set(parts[1]);  // fk
@@ -118,7 +117,7 @@ public class taskF {
     public static void main(String[] args) throws Exception {
         Configuration conf= new Configuration();
         Job job=new Job(conf,"Task F");
-        job.setJarByClass(taskF.class);
+        job.setJarByClass(TaskF.class);
         job.setReducerClass(ReduceJoinReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
