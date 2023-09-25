@@ -39,9 +39,8 @@ public class TaskG {
     public static class AccessMapper extends Mapper<Object, Text, Text, Text> {
         private Text perId = new Text();
         private Text accessID = new Text();
-        private SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy HH:mm"); // Updated date format
+        private SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy HH:mm"); //  date format
         private long currentDateTime;
-        //private Text accessDate = new Text();
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
             currentDateTime = System.currentTimeMillis(); // Set the current date time in milliseconds
@@ -55,16 +54,15 @@ public class TaskG {
                 if (parts.length >= 2) {
                     String accessDateStr = parts[4].trim(); // get accesstime
                     Date accessDate = null;
-
                     try {
-                        accessDate = dateFormat.parse(accessDateStr);
-                        long accessTimeMillis = accessDate.getTime();
-                        long dayDifference = (currentDateTime - accessTimeMillis) / (24L * 60L * 60L * 1000L);
+                        accessDate = dateFormat.parse(accessDateStr); // parse date value
+                        long accessTimeMillis = accessDate.getTime(); // assign current date time to variable
+                        long dayDifference = (currentDateTime - accessTimeMillis) / (24L * 60L * 60L * 1000L); //get difference of current date and access date
 
-                        if (dayDifference <= 90) {
-                            perId.set(parts[1]); // Set personId
-                            accessID.set("AccessCount\t" + parts[0]); // Set relation id as value
-                            context.write(perId, accessID);
+                        if (dayDifference <= 90) {   // fetch the users who accessed platform within last 90days
+                            perId.set(parts[1]); // Set personId - ByWho
+                            accessID.set("AccessCount\t" + parts[0]); // concanate AccessCount and access id as value
+                            context.write(perId, accessID); 
                         }
                      } catch (ParseException e) {
                         System.err.println("Error parsing date: " + accessDateStr);
@@ -88,19 +86,19 @@ public class TaskG {
             for (Text value : values) {
                 String[] parts = value.toString().split("\t");
                 if (parts.length == 2) {
-                    String dataType = parts[0];
+                    String joinkey = parts[0];
                     String dataValue = parts[1];
-                    if (dataType.equals("AccessCount"))
+                    if (joinkey.equals("AccessCount")) // if values from Accessmapper
                     {
-                        countaccess++;
+                        countaccess++; 
                     }
                 }
                 else {
-                    String dataType = parts[0];
+                    String joinkey = parts[0];
                     String dataValue = parts[1];
                     String dataValue1 = parts[2];
 
-                    if (dataType.equals("Name")) {
+                    if (joinkey.equals("Name")) {  // if values from FaceIn mapper
                         name = dataValue;
                         pid = dataValue1;
                     }
@@ -108,7 +106,8 @@ public class TaskG {
 
             }
 
-            if (name != null  & countaccess==0) {
+            if (name != null  & countaccess==0) // if the user doesn't have any access within last 90 days
+            {
                 pName.set(name);
                 perid.set(pid);
                 context.write(perid,pName);
