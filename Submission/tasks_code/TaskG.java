@@ -67,7 +67,6 @@ public class TaskG {
                             context.write(perId, accessID);
                         }
                      } catch (ParseException e) {
-                        // Log the parsing error and continue processing the next line
                         System.err.println("Error parsing date: " + accessDateStr);
                     }
                 }
