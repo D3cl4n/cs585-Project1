@@ -78,6 +78,19 @@ public class TaskH {
         }
     }
 
+    public static void debug(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = new Job(conf, "Task H");
+        job.setJarByClass(TaskH.class);
+        job.setReducerClass(IntSumReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, PersonAMapper.class);
+        MultipleInputs.addInputPath(job, new Path(args[1]), TextInputFormat.class, PersonBMapper.class);
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         Job job = new Job(conf, "Task H");
@@ -86,12 +99,9 @@ public class TaskH {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        MultipleInputs.addInputPath(job, new Path("C:///Users/ganer/Documents/classes2023/fall/Big_data/associates.csv"), TextInputFormat.class, PersonAMapper.class);
-        MultipleInputs.addInputPath(job, new Path("C:///Users/ganer/Documents/classes2023/fall/Big_data/associates.csv"), TextInputFormat.class, PersonBMapper.class);
-        Path outputPath = new Path("hdfs://localhost:9000/project1/taskHTest.txt");
-
-        FileOutputFormat.setOutputPath(job, outputPath);
-        outputPath.getFileSystem(conf).delete(outputPath);
+        MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, PersonAMapper.class);
+        MultipleInputs.addInputPath(job, new Path(args[1]), TextInputFormat.class, PersonBMapper.class);
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
