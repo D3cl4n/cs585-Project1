@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.IntWritable;
 
-public class TaskD {
+public class taskD {
     public static class FaceInMapper extends Mapper<Object, Text, Text, Text> {
         private Text outkey = new Text();
         private Text outvalue = new Text();
@@ -82,7 +82,7 @@ public class TaskD {
     public static void main(String[] args) throws Exception {
         Configuration conf= new Configuration();
         Job job=new Job(conf,"Task D");
-        job.setJarByClass(TaskD.class);
+        job.setJarByClass(taskD.class);
         job.setReducerClass(ReduceJoinReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
