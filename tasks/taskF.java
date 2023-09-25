@@ -18,7 +18,6 @@ public class taskF {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: ProductID,Name
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     outkey.set(parts[0]);
@@ -38,7 +37,6 @@ public class taskF {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: OrderID,ProductID,Amount
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     perId.set(parts[1]);  // fk
