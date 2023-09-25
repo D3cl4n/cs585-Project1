@@ -132,7 +132,7 @@ public class TaskB {
             storeFaceInInfoInArray();
 //            System.out.println(allPageIDs.toString());
 //            System.out.println(allFaceInInfo.toString());
-            outKey.set("Most Popular Pages\n");
+            outKey.set("Most Popular Pages after viewing " + allPageIDs.size() + " pages:\n");
             outValue.set(convertPopularPagesArrayToString());
             context.write(outKey,outValue);
         }
