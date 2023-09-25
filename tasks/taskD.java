@@ -11,14 +11,13 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.IntWritable;
 
-public class TaskD {
+public class taskD {
     public static class FaceInMapper extends Mapper<Object, Text, Text, Text> {
         private Text outkey = new Text();
         private Text outvalue = new Text();
         public void map (Object key, Text value, Context context)
             throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: ProductID,Name
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     outkey.set(parts[0]);
@@ -38,7 +37,6 @@ public class TaskD {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             if (!isHeader(value)) {
-                // Assuming the input format is: OrderID,ProductID,Amount
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     perId.set(parts[1]);  // fk
@@ -84,7 +82,7 @@ public class TaskD {
     public static void main(String[] args) throws Exception {
         Configuration conf= new Configuration();
         Job job=new Job(conf,"Reduce Side Join");
-        job.setJarByClass(TaskD.class);
+        job.setJarByClass(taskD.class);
         job.setReducerClass(ReduceJoinReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
