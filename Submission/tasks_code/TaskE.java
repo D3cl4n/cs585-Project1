@@ -41,20 +41,15 @@ public class taskEtest {
         //private datetime accessDate = new
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
-            if (!isHeader(value)) {
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     perId.set(parts[1]);  // fk
                     accessID.set("AccessCount\t" + parts[0]); //relation id as value
                     context.write(perId, accessID);
                 }
-            }
-
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("AccessId, ByWho,WhatPage,TypeOfAccess,AccessTime");
         }
     }
+    
     public static class ReduceJoinReducer extends Reducer<Text, Text, Text, Text>{
         private Text pName = new Text();
         public void reduce(Text key, Iterable<Text> values, Context context)
