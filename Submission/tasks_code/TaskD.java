@@ -52,16 +52,16 @@ public class TaskD {
 
             for (Text value : values) {
                 String[] parts = value.toString().split("\t");
-                if (parts.length == 2) {
+
                     String keyType = parts[0];
                     String dataValue = parts[1];
 
                     if (keyType.equals("Name")) {
                         name = dataValue;  // assign name
-                    } else if (keyType.equals("RelCount")) {
+                    }
+                    else if (keyType.equals("RelCount")) {
                         count++; // increase counter
                     }
-                }
             }
 
             if (name != null) {
