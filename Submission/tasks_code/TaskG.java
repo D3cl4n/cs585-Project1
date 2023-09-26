@@ -20,19 +20,10 @@ public class TaskG {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
 
-            if (!isHeader(value)) {
-
                 String[] parts = value.toString().split(",");
-                if (parts.length >= 2) {
                     outkey.set(parts[0]);
                     outvalue.set("Name\t" + parts[1]+"\t"+parts[0]); //concanate the name and id in the the value section
                     context.write(outkey, outvalue);
-                }
-            }
-
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("ID,Name,Nationality,Country Code,Hobby");
         }
     }
 
@@ -48,7 +39,7 @@ public class TaskG {
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
             Date today= new Date();
-            if (!isHeader(value)) {
+
                 String[] parts = value.toString().split(",");
 
                 if (parts.length >= 2) {
@@ -62,18 +53,15 @@ public class TaskG {
                         if (dayDifference <= 90) {   // fetch the users who accessed platform within last 90days
                             perId.set(parts[1]); // Set personId - ByWho
                             accessID.set("AccessCount\t" + parts[0]); // concanate AccessCount and access id as value
-                            context.write(perId, accessID); 
+                            context.write(perId, accessID);
                         }
-                     } catch (ParseException e) {
+                    } catch (ParseException e) {
                         System.err.println("Error parsing date: " + accessDateStr);
                     }
                 }
-            }
 
         }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("AccessId, ByWho,WhatPage,TypeOfAccess,AccessTime");
-        }
+
     }
     public static class ReduceJoinReducer extends Reducer<Text, Text, Text, Text>{
         private Text pName = new Text();
@@ -85,27 +73,19 @@ public class TaskG {
             int countaccess=0;
             for (Text value : values) {
                 String[] parts = value.toString().split("\t");
-                if (parts.length == 2) {
-                    String joinkey = parts[0];
-                    String dataValue = parts[1];
-                    if (joinkey.equals("AccessCount")) // if values from Accessmapper
-                    {
-                        countaccess++; 
-                    }
+                String joinkey = parts[0];
+                String dataValue = parts[1];
+                if (joinkey.equals("AccessCount"))//(parts.length == 2) // if values from Accessmapper
+                {
+                        countaccess++;
                 }
-                else {
-                    String joinkey = parts[0];
-                    String dataValue = parts[1];
-                    String dataValue1 = parts[2];
-
-                    if (joinkey.equals("Name")) {  // if values from FaceIn mapper
+                else if (joinkey.equals("Name")) // if values from FaceIn mapper
+                {
+                        String dataValue1 = parts[2];
                         name = dataValue;
                         pid = dataValue1;
-                    }
                 }
-
             }
-
             if (name != null  & countaccess==0) // if the user doesn't have any access within last 90 days
             {
                 pName.set(name);
