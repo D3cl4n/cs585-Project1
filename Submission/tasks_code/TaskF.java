@@ -17,18 +17,13 @@ public class TaskF {
         private Text outvalue = new Text();
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
-            if (!isHeader(value)) {
+
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
-                    outkey.set(parts[0]); // key
-                    outvalue.set("Name\t" + parts[1]+"\t"+parts[0]); //concanate the name and id in the the value section
+                    outkey.set(parts[0]); // personid as a key
+                    outvalue.set("Name\t" + parts[1]+"\t"+parts[0]); //concanate the name and id as a value
                     context.write(outkey, outvalue);
                 }
-            }
-
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("ID,Name,Nationality,Country Code,Hobby");
         }
     }
     public static class AssociatesMapper extends Mapper<Object, Text, Text, Text> {
@@ -36,19 +31,15 @@ public class TaskF {
         private Text relID = new Text();
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
-            if (!isHeader(value)) {
+
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
                     perId.set(parts[1]);  // key
-                    relID.set("RelCount\t" + parts[0]); //relcount+relation id as value
+                    relID.set("RelCount\t" + parts[0]); //'Relcount'+relation id as value
                     context.write(perId, relID);
                 }
-            }
+        }
 
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("FriendRel,PersonA_ID,PersonB_ID,DateOfFriendship,Desc");
-        }
     }
 
     public static class AccessMapper extends Mapper<Object, Text, Text, Text> {
@@ -56,19 +47,15 @@ public class TaskF {
         private Text accessID = new Text();
         public void map (Object key, Text value, Context context)
                 throws IOException, InterruptedException{
-            if (!isHeader(value)) {
+
                 String[] parts = value.toString().split(",");
                 if (parts.length >= 2) {
-                    perId.set(parts[1]);  // fk
-                    accessID.set("AccessCount\t" + parts[0]); //relation id as value
+                    perId.set(parts[1]);  // set ByWho as key
+                    accessID.set("AccessCount\t" + parts[0]); //'AccessCount'+relation id as value
                     context.write(perId, accessID);
                 }
-            }
+        }
 
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("AccessId, ByWho,WhatPage,TypeOfAccess,AccessTime");
-        }
     }
     public static class ReduceJoinReducer extends Reducer<Text, Text, Text, Text>{
         private Text pName = new Text();
@@ -78,38 +65,31 @@ public class TaskF {
                 throws IOException, InterruptedException{
             String name = null;
             String pid=null;
-            int countrel = 0;
-            int countaccess=0;
+            int countrel = 0; //count relation counter
+            int countaccess=0; // count access counter
 
             for (Text value : values) {
                 String[] parts = value.toString().split("\t");
-                if (parts.length == 2) {
-                    String dataType = parts[0];
-                    String dataValue = parts[1];
+                String keyType = parts[0];
+                String dataValue = parts[1];
 
-                   if (dataType.equals("RelCount")) {
+                    if (keyType.equals("RelCount")) {
                         countrel++;
                     }
-                    else if (dataType.equals("AccessCount")) {
+                    else if (keyType.equals("AccessCount")) {
                         countaccess++;
                     }
-                }
-                else {
-                    String dataType = parts[0];
-                    String dataValue = parts[1];
-                    String dataValue1 = parts[2];
-
-                    if (dataType.equals("Name")) {
+                    else if (keyType.equals("Name")) {
+                        String dataValue1 = parts[2];
                         name = dataValue;
                         pid = dataValue1;
                     }
-                }
-
             }
 
-            if (name != null & countrel>0 & countaccess==0) {
-                pName.set(name);
-                perid.set(pid);
+            if (name != null & countrel>0 & countaccess==0) // filter users who has relations but don't access to the other pages
+            {
+                pName.set(name); // set person name
+                perid.set(pid);  // set personid
                 context.write(perid,pName);
             }
         }
@@ -125,7 +105,6 @@ public class TaskF {
         MultipleInputs.addInputPath(job, new Path("C:///Users/ganer/Documents/classes2023/fall/Big_data/FaceIn.csv"),TextInputFormat.class, FaceInMapper.class);
         MultipleInputs.addInputPath(job, new Path("C:///Users/ganer/Documents/classes2023/fall/Big_data/associates.csv"),TextInputFormat.class, AssociatesMapper.class);
         MultipleInputs.addInputPath(job, new Path("C:///Users/ganer/Documents/classes2023/fall/Big_data/access.csv"),TextInputFormat.class, AccessMapper.class);
-        //MultipleInputs.addInputPath(job, new Path("hdfs://localhost:9000/project1/associates.csv"),TextInputFormat.class, AssociatesMapper.class);
         Path outputPath= new Path("hdfs://localhost:9000/project1/taskF.txt");
 
         FileOutputFormat.setOutputPath(job,outputPath);
