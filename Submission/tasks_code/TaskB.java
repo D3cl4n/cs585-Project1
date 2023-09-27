@@ -29,17 +29,12 @@ public class TaskB {
         private Text outkey = new Text();
         private Text outvalue = new Text();
         public void map (Object key, Text value, Context context) throws IOException, InterruptedException{
-            if (!isHeader(value)) {
-                String[] csvLine = value.toString().split(",");
-                if (csvLine.length >= 2) {
-                    outkey.set(csvLine[0]); //fk - ID
-                    outvalue.set("ID\t" + csvLine[0] + "\t" + "Name\t" + csvLine[1] + "\t" + "Nationality\t" + csvLine[2]);
-                    context.write(outkey, outvalue);
-                }
+            String[] csvLine = value.toString().split(",");
+            if (csvLine.length >= 2) {
+                outkey.set(csvLine[0]); //fk - ID
+                outvalue.set("ID\t" + csvLine[0] + "\t" + "Name\t" + csvLine[1] + "\t" + "Nationality\t" + csvLine[2]);
+                context.write(outkey, outvalue);
             }
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("ID,Name,Nationality,Country Code,Hobby");
         }
     }
     public static class AccesslogsMapper extends Mapper<Object, Text, Text, Text> {
@@ -48,17 +43,11 @@ public class TaskB {
         private final static Text one = new Text("A1");
 
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            if (!isHeader(value)) {
-                String[] csvLine;
-                csvLine = value.toString().split(",");
-                // Push the WhatPage ID into the output
-                output.set(csvLine[2]);
-                context.write(output, one); // fk - WhatPage
-            }
-        }
-
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("AccessId, ByWho, WhatPage, TypeOfAccess, AccessTime");
+            String[] csvLine;
+            csvLine = value.toString().split(",");
+            // Push the WhatPage ID into the output
+            output.set(csvLine[2]);
+            context.write(output, one); // fk - WhatPage
         }
     }
     public static class ReduceJoinReducer extends Reducer<Text, Text, Text, Text>{
