@@ -32,9 +32,7 @@ class LogsGeneration:
         return possible_ids
     
     def create_output_csv(self):
-        with open(self.output_path, "w") as f:
-            f.write("AccessId, ByWho, WhatPage, TypeOfAccess, AccessTime\n")
-        f.close()
+        pass
 
     def write_to_csv(self, entry):
         with open(self.output_path, "a+") as f:
