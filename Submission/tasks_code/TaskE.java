@@ -18,20 +18,13 @@ public class taskEtest {
     public static class FaceInMapper extends Mapper<Object, Text, Text, Text> {
         private Text outkey = new Text();
         private Text outvalue = new Text();
-        public void map (Object key, Text value, Context context)
-                throws IOException, InterruptedException{
-            if (!isHeader(value)) {
-                String[] parts = value.toString().split(",");
-                if (parts.length >= 2) {
-                    outkey.set(parts[0]);
-                    outvalue.set("Name\t" + parts[1]); //concanate the name
-                    context.write(outkey, outvalue);
-                }
+        public void map (Object key, Text value, Context context) throws IOException, InterruptedException {
+            String[] parts = value.toString().split(",");
+            if (parts.length >= 2) {
+                outkey.set(parts[0]);
+                outvalue.set("Name\t" + parts[1]); //concanate the name
+                context.write(outkey, outvalue);
             }
-
-        }
-        private boolean isHeader(Text value) {
-            return value.toString().startsWith("ID,Name,Nationality,Country Code,Hobby");
         }
     }
 
