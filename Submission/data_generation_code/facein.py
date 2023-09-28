@@ -31,4 +31,4 @@ class FaceInData:
         FaceIn=pd.DataFrame(FaceIn,columns=['ID','Name','Nationality','Country Code','Hobby'])
         # FaceIn   
     
-        FaceIn.to_csv('facein.csv',sep=',',index=False,header=False)
+        FaceIn.to_csv('facein.csv',sep=',',index=False)
