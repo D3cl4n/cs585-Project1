@@ -13,5 +13,32 @@ def main():
     associate_handler = Associates(size)
     associate_handler.generateData()
 
+    with open("access.csv", "r") as f:
+        data = f.read().splitlines(True)
+
+    with open("access.csv", "w") as f_out:
+        f_out.writelines(data[1:])
+
+    f.close()
+    f_out.close()
+
+    with open("associates.csv", "r") as f:
+        data = f.read().splitlines(True)
+
+    with open("associates.csv", "w") as f_out:
+        f_out.writelines(data[1:])
+
+    f.close()
+    f_out.close()
+
+    with open("facein.csv", "r") as f:
+        data = f.read().splitlines(True)
+
+    with open("facein.csv", "w") as f_out:
+        f_out.writelines(data[1:])
+
+    f.close()
+    f_out.close()
+
 if __name__ == '__main__':
     main()
